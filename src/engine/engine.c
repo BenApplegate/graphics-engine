@@ -4,19 +4,19 @@
 
 #include "engine.h"
 
-#include "mesh.h"
-#include "shader.h"
-
 struct engine_flags ENGINE_FLAGS = {false};
 
-static struct engine_data {
+static struct {
 	GLFWwindow* window;
 	int window_width;
 	int window_height;
 } ENGINE_DATA;
 
+/// glfw Framebuffer size callback used for resetting the viewport
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
 	glViewport(0, 0, width, height);
+	ENGINE_DATA.window_width = width;
+	ENGINE_DATA.window_height = height;
 }
 
 /// Creates the window, OpenGL Context, and loads GLAD
@@ -36,8 +36,8 @@ int init_glfw_window(int width, int height, const char *title) {
 	ENGINE_DATA.window_width = width;
 	ENGINE_DATA.window_height = height;
 
-	ENGINE_DATA.window = glfwCreateWindow(ENGINE_DATA.window_width, ENGINE_DATA.window_height, title, NULL, NULL);
-	if(ENGINE_DATA.window == NULL){
+	ENGINE_DATA.window = glfwCreateWindow(ENGINE_DATA.window_width, ENGINE_DATA.window_height, title, nullptr, nullptr);
+	if(ENGINE_DATA.window == nullptr){
 		fprintf(stderr, "Failed to create window\n");
 		glfwTerminate();
 		return -1;
@@ -51,40 +51,39 @@ int init_glfw_window(int width, int height, const char *title) {
 		glfwTerminate();
 		return -2;
 	}
-
 	return 0;
 }
 
-int start_engine(int width, int height, const char* title) {
+int engine_init(int width, int height, const char* title) {
 	if (ENGINE_FLAGS.verbose)
 		printf("Graphics engine Starting!\n");
 
-	bool returns;
 	if (init_glfw_window(width, height, title)) {
-		//If the function doesnt return 0 it failed to create an opengl context and we should exit
+		//If the function doesn't return 0 it failed to create an opengl context and we should exit
 		return -1;
 	};
 
 	glViewport(0, 0, 800, 600);
 
-	glClearColor(0.2, 0.15, 0.25, 1.0);
+	glClearColor(0.2f, 0.15f, 0.25f, 1.0f);
+	return 0;
+}
 
-	struct mesh test_mesh = setup_test_triangle();
-	struct shader shader2 = load_shader("test.vertex", "test.fragment");
-
-	//Render loop
+void engine_render_loop() {
 	while(!glfwWindowShouldClose(ENGINE_DATA.window)){
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 
 		glfwSwapBuffers(ENGINE_DATA.window);
 		glfwPollEvents();
 
 	}
+}
 
-	//Free resources
+void engine_free() {
+
+	//Terminate GLFW
 	glfwTerminate();
-	return 0;
 }
