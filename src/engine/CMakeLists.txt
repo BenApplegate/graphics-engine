@@ -1,0 +1,1 @@
+target_sources(graphics_engine PRIVATE engine.c engine.h mesh.c mesh.h shader.c shader.h)
