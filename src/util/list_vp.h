@@ -14,7 +14,7 @@ struct list_vp list_vp_new(size_t initial_capacity);
 
 /// Delete allocated space for list, list should not be used after this is called
 /// @param list The list to delete
-void list_vp_delete(struct list_vp* list);
+void list_vp_delete(const struct list_vp* list);
 
 /// Resets all data in allocated list to nullptr, and resets size
 /// @param list The list to clear
@@ -35,4 +35,4 @@ void list_vp_add(struct list_vp* list, void* item);
 /// @param list the list to access data from
 /// @param index the index to retrieve data from
 /// @returns The item at the specified index in the list, or NULLPTR if index is out of list bounds
-void* list_vp_at(struct list_vp* list, size_t index);
+void* list_vp_at(const struct list_vp* list, size_t index);
