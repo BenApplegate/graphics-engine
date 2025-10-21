@@ -1,8 +1,10 @@
 #pragma once
+#include <GLFW/glfw3.h>
 
 //Engine flags can be changed and accessed data, right now the only option is verbose logging
 struct engine_flags {
     int verbose;
+    int show_imgui_windows; //0 = no imgui at all, 1 = show imgui, 2 = draw test windows
 };
 
 extern struct engine_flags ENGINE_FLAGS;
@@ -20,3 +22,5 @@ void engine_render_loop();
 /// Free all engine resources
 /// attempts to dispose of all currently loaded engine data
 void engine_free();
+
+GLFWwindow* engine_get_window();

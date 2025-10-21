@@ -4,6 +4,8 @@
 
 #include "engine.h"
 
+#include "imgui_handler.h"
+
 struct engine_flags ENGINE_FLAGS = {false};
 
 static struct {
@@ -51,6 +53,8 @@ int init_glfw_window(int width, int height, const char *title) {
 		glfwTerminate();
 		return -2;
 	}
+
+	imgui_init();
 	return 0;
 }
 
@@ -71,19 +75,27 @@ int engine_init(int width, int height, const char* title) {
 
 void engine_render_loop() {
 	while(!glfwWindowShouldClose(ENGINE_DATA.window)){
-
+		glfwPollEvents();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		imgui_update();
 
 
+
+		imgui_render();
 		glfwSwapBuffers(ENGINE_DATA.window);
-		glfwPollEvents();
+
 
 	}
 }
 
 void engine_free() {
 
+	imgui_shutdown();
 	//Terminate GLFW
 	glfwTerminate();
+}
+
+GLFWwindow* engine_get_window() {
+	return ENGINE_DATA.window;
 }
