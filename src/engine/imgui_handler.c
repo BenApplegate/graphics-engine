@@ -1,6 +1,5 @@
 #include "imgui_handler.h"
 
-#define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #include <cimgui/cimgui.h>
 #define CIMGUI_USE_OPENGL3
 #define CIMGUI_USE_GLFW
@@ -23,6 +22,8 @@ void imgui_init() {
     igGetStyle()->FontScaleMain *= 2.0f;
     ImGuiStyle_ScaleAllSizes(igGetStyle(), 3.0f);
 
+    igGetIO_Nil()->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
 }
 
 void imgui_shutdown() {
@@ -37,6 +38,7 @@ void imgui_update() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     igNewFrame();
+    igDockSpaceOverViewport(0, igGetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode, nullptr);
 
     if (ENGINE_FLAGS.show_imgui_windows >= 2) {
         igShowDemoWindow(nullptr);

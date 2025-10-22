@@ -5,6 +5,7 @@
 #include "engine.h"
 
 #include "imgui_handler.h"
+#include <cimgui/cimgui.h>
 
 struct engine_flags ENGINE_FLAGS = {false};
 
@@ -79,8 +80,6 @@ void engine_render_loop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		imgui_update();
-
-
 
 		imgui_render();
 		glfwSwapBuffers(ENGINE_DATA.window);
