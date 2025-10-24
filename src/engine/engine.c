@@ -90,6 +90,7 @@ void engine_render_loop() {
 
 		if (ENGINE_FLAGS.show_imgui_windows > 0) {
 			ui_draw_engine_menu_bar();
+			ui_draw_engine_ui();
 		}
 
 		//Loop over all scenes, and update them, then render them
@@ -124,4 +125,8 @@ GLFWwindow* engine_get_window() {
 void engine_load_new_scene(const char* name) {
 	struct scene* new_scene = scene_new(name);
 	list_vp_add(&ENGINE_DATA.scene_list, new_scene);
+}
+
+struct list_vp* engine_get_scenes() {
+	return &ENGINE_DATA.scene_list;
 }

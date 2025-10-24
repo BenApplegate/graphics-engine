@@ -21,3 +21,6 @@ void scene_update(struct scene* scene);
 
 /// Render the given scene, telling all objects and components to render
 void scene_render(struct scene* scene);
+
+/// Draws the imgui debug ui for the specified scene
+void scene_draw_debug_ui(struct scene* scene);

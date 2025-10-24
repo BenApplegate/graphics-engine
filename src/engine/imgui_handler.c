@@ -40,13 +40,6 @@ void imgui_update() {
     igNewFrame();
     igDockSpaceOverViewport(0, igGetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode, nullptr);
 
-    if (ENGINE_FLAGS.show_imgui_windows >= 2) {
-        igShowDemoWindow(nullptr);
-
-        igBegin("Test window", nullptr, 0);
-        igText("If you see this, the thing is working");
-        igEnd();
-    }
 }
 
 void imgui_render() {

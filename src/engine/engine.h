@@ -28,3 +28,4 @@ GLFWwindow* engine_get_window();
 
 void engine_load_new_scene(const char* name);
 
+struct list_vp* engine_get_scenes();
