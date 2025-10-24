@@ -19,5 +19,6 @@ struct object* object_new(const char* name, struct object* parent);
 /// @param object the object to free
 void object_free(struct object* object);
 
-
+/// Update all components then update all children
+/// @param object the object to update
 void object_update(struct object* object);
