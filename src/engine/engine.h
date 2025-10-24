@@ -23,4 +23,8 @@ void engine_render_loop();
 /// attempts to dispose of all currently loaded engine data
 void engine_free();
 
+/// Returns a pointer to the engine's GLFWwindow
 GLFWwindow* engine_get_window();
+
+void engine_load_new_scene(const char* name);
+

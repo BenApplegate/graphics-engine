@@ -5,6 +5,8 @@
 #include "engine.h"
 
 #include "imgui_handler.h"
+#include  "../util/list_vp.h"
+#include "scene.h"
 #include <cimgui/cimgui.h>
 
 struct engine_flags ENGINE_FLAGS = {false};
@@ -13,6 +15,8 @@ static struct {
 	GLFWwindow* window;
 	int window_width;
 	int window_height;
+
+	struct list_vp scene_list;
 } ENGINE_DATA;
 
 /// glfw Framebuffer size callback used for resetting the viewport
@@ -71,6 +75,9 @@ int engine_init(int width, int height, const char* title) {
 	glViewport(0, 0, 800, 600);
 
 	glClearColor(0.2f, 0.15f, 0.25f, 1.0f);
+
+	//create scene list
+	ENGINE_DATA.scene_list = list_vp_new(5);
 	return 0;
 }
 
@@ -81,6 +88,12 @@ void engine_render_loop() {
 
 		imgui_update();
 
+		//Loop over all scenes, and update them, then render them
+		for (int i = 0; i < ENGINE_DATA.scene_list.size; i++) {
+			scene_update(ENGINE_DATA.scene_list.data[i]);
+			scene_render(ENGINE_DATA.scene_list.data[i]);
+		}
+
 		imgui_render();
 		glfwSwapBuffers(ENGINE_DATA.window);
 
@@ -89,6 +102,11 @@ void engine_render_loop() {
 }
 
 void engine_free() {
+	//Free all scenes
+	for (int i = 0; i < ENGINE_DATA.scene_list.size; i++) {
+		scene_free(ENGINE_DATA.scene_list.data[i]);
+	}
+	list_vp_delete(&ENGINE_DATA.scene_list);
 
 	imgui_shutdown();
 	//Terminate GLFW
@@ -97,4 +115,9 @@ void engine_free() {
 
 GLFWwindow* engine_get_window() {
 	return ENGINE_DATA.window;
+}
+
+void engine_load_new_scene(const char* name) {
+	struct scene* new_scene = scene_new(name);
+	list_vp_add(&ENGINE_DATA.scene_list, new_scene);
 }
