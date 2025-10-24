@@ -4,6 +4,8 @@
 #include <string.h>
 #include <cimgui/cimgui.h>
 
+#include "object.h"
+
 struct scene* scene_new(const char* name) {
     struct scene* new_scene = malloc(sizeof(struct scene));
     new_scene->name = name;
@@ -35,6 +37,30 @@ void scene_draw_debug_ui(struct scene* scene) {
 
     igText("Objects: %i", scene->objects_list.size);
     igText("Current Objects Capacity: %i", scene->objects_list.capacity);
+
+    igSeparator();
+
+    //Add popup to add scene item
+    ImVec2 size = {1.0f, 1.0f};
+    if (igButton("Add Object", size)) {
+        igOpenPopup_Str("Add Scene Objects", ImGuiPopupFlags_None);
+    }
+
+    if (igBeginPopupModal("Add Scene Object", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+
+
+        //Cancel and close button
+    }
+
+    if (igTreeNodeEx_Str("Scene Tree", ImGuiTreeNodeFlags_DrawLinesFull)) {
+        for (int i = 0; i < scene->objects_list.size; i++) {
+            object_draw_scene_tree_node(scene->objects_list.data[i]);
+        }
+
+        igTreePop();
+    }
+
+
 
     igEnd();
 }

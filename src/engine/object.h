@@ -19,6 +19,19 @@ struct object* object_new(const char* name, struct object* parent);
 /// @param object the object to free
 void object_free(struct object* object);
 
-/// Update all components then update all children
+/// Update all children then update components
 /// @param object the object to update
-void object_update(struct object* object);
+void object_update(const struct object* object);
+
+/// Render all children then render components
+/// @param object the object to render
+void object_render(const struct object* object);
+
+/// Create a new object and set it as a child of the given object
+/// @param object the object to create a new child for
+/// @param child_name the name of the new child
+void object_add_new_child(struct object* object, const char* child_name);
+
+/// Draw a tree node for this object in the scene tree window
+/// @param object the object to draw the tree node for
+void object_draw_scene_tree_node(const struct object* object);

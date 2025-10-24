@@ -2,6 +2,7 @@
 
 struct ui_flags {
     bool show_scene_windows;
+    bool show_imgui_demo_window;
 };
 
 extern struct ui_flags UI_FLAGS;

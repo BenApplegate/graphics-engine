@@ -8,6 +8,7 @@
 #include "../scene.h"
 
 struct ui_flags UI_FLAGS = {
+    false,
     false
 };
 
@@ -25,7 +26,7 @@ void ui_draw_engine_menu_bar() {
 
         if (igBeginMenu("Window", true)) {
             igMenuItem_BoolPtr("Show Scene Windows", "", &UI_FLAGS.show_scene_windows, true);
-
+            if (ENGINE_FLAGS.show_imgui_windows >= 2) igMenuItem_BoolPtr("Show ImGui Demo Window", "", &UI_FLAGS.show_imgui_demo_window, true);
             igEndMenu();
         }
 
@@ -39,5 +40,9 @@ void ui_draw_engine_ui() {
         for (int i = 0; i < scenes->size; i++) {
             scene_draw_debug_ui(scenes->data[i]);
         }
+    }
+
+    if (UI_FLAGS.show_imgui_demo_window) {
+        igShowDemoWindow(0);
     }
 }
