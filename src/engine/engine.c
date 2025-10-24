@@ -7,7 +7,7 @@
 #include "imgui_handler.h"
 #include  "../util/list_vp.h"
 #include "scene.h"
-#include <cimgui/cimgui.h>
+#include "ui/engine_ui.h"
 
 struct engine_flags ENGINE_FLAGS = {false};
 
@@ -87,6 +87,10 @@ void engine_render_loop() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		imgui_update();
+
+		if (ENGINE_FLAGS.show_imgui_windows > 0) {
+			ui_draw_engine_menu_bar();
+		}
 
 		//Loop over all scenes, and update them, then render them
 		for (int i = 0; i < ENGINE_DATA.scene_list.size; i++) {
