@@ -17,10 +17,13 @@ void scene_free(struct scene* scene);
 
 /// Update given scene, updating all objects and underlying components
 /// @param scene The scene to update
-void scene_update(struct scene* scene);
+void scene_update(const struct scene* scene);
 
 /// Render the given scene, telling all objects and components to render
-void scene_render(struct scene* scene);
+void scene_render(const struct scene* scene);
+
+/// Add a new child object to the scene with the given name
+void scene_add_new_object(struct scene* scene, const char* name);
 
 /// Draws the imgui debug ui for the specified scene
 void scene_draw_debug_ui(struct scene* scene);

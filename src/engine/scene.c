@@ -19,12 +19,20 @@ void scene_free(struct scene* scene) {
     free(scene);
 }
 
-void scene_update(struct scene* scene) {
-
+void scene_update(const struct scene* scene) {
+    for (int i = 0; i < scene->objects_list.size; i++) {
+        object_update(list_vp_at(&scene->objects_list, i));
+    }
 }
 
-void scene_render(struct scene* scene) {
+void scene_render(const struct scene* scene) {
+    for (int i = 0; i < scene->objects_list.size; i++) {
+        object_render(list_vp_at(&scene->objects_list, i));
+    }
+}
 
+void scene_add_new_object(struct scene* scene, const char* name) {
+    list_vp_add(&scene->objects_list, object_new(name, nullptr));
 }
 
 void scene_draw_debug_ui(struct scene* scene) {
@@ -41,15 +49,30 @@ void scene_draw_debug_ui(struct scene* scene) {
     igSeparator();
 
     //Add popup to add scene item
-    ImVec2 size = {1.0f, 1.0f};
+    ImVec2 size = {200.0f, 30.0f};
     if (igButton("Add Object", size)) {
-        igOpenPopup_Str("Add Scene Objects", ImGuiPopupFlags_None);
+        igOpenPopup_Str("Add Scene Object", ImGuiPopupFlags_None);
     }
 
-    if (igBeginPopupModal("Add Scene Object", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+    ImVec2 center;
+    ImVec2 pivot = {0.5f, 0.5f};
+    ImGuiViewport_GetCenter(&center, igGetMainViewport());
+    igSetNextWindowPos(center, ImGuiCond_Appearing, pivot);
 
+    if (igBeginPopupModal("Add Scene Object", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        static char object_name[64] = "New Object";
+
+        igInputText("Object Name", object_name, 64, ImGuiInputTextFlags_None, nullptr, nullptr);
 
         //Cancel and close button
+        if (igButton("Add Object", size)) {
+            scene_add_new_object(scene, object_name);
+            igCloseCurrentPopup();
+        }
+        igSameLine(1, 1);
+        if (igButton("Close", size)) { igCloseCurrentPopup(); }
+
+        igEndPopup();
     }
 
     if (igTreeNodeEx_Str("Scene Tree", ImGuiTreeNodeFlags_DrawLinesFull)) {
