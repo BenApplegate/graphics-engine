@@ -2,7 +2,7 @@
 #include "../util/list_vp.h"
 
 struct scene {
-    const char* name;
+    char* name;
     struct list_vp objects_list;
 };
 

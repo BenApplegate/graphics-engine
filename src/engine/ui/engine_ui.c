@@ -8,7 +8,7 @@
 #include "../scene.h"
 
 struct ui_flags UI_FLAGS = {
-    false,
+    true,
     false
 };
 
