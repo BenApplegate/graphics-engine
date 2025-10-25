@@ -24,38 +24,15 @@ struct component {
 
 struct component* get_new_component_of_type(enum COMPONENT_TYPE type);
 
-inline void component_init(struct component* component){
-    if (component->interface->init != nullptr) {
-        component->interface->init(component->data);
-    }
-}
+void component_init(struct component* component);
 
-inline void component_update(struct component* component){
-    if (component->interface->update != nullptr) {
-        component->interface->update(component->data);
-    }
-}
+void component_update(struct component* component);
 
-inline void component_render(struct component* component){
-    if (component->interface->render != nullptr) {
-        component->interface->render(component->data);
-    }
-}
+void component_render(struct component* component);
 
 /// Call the component's free function from the interface, and then free the component itself
 /// Component should not be used or loaded in the scene after this is called
 /// @param component The component to free
-inline void component_free(struct component* component){
-    if (component->interface->free != nullptr) {
-        // Call the provided free function on the component
-        component->interface->free(component->data);
-    }
+void component_free(struct component* component);
 
-    free(component);
-}
-
-inline void component_draw_debug_ui(struct component* component){
-    if (component->interface->draw_debug_ui != nullptr) {
-        component->interface->draw_debug_ui(component->data);
-    }
-}
+void component_draw_debug_ui(struct component* component);

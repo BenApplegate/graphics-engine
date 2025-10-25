@@ -16,3 +16,36 @@ struct component* get_new_component_of_type(enum COMPONENT_TYPE type) {
             return nullptr;
     }
 }
+
+void component_init(struct component* component){
+    if (component->interface->init != nullptr) {
+        component->interface->init(component->data);
+    }
+}
+
+void component_update(struct component* component){
+    if (component->interface->update != nullptr) {
+        component->interface->update(component->data);
+    }
+}
+
+void component_render(struct component* component){
+    if (component->interface->render != nullptr) {
+        component->interface->render(component->data);
+    }
+}
+
+void component_free(struct component* component){
+    if (component->interface->free != nullptr) {
+        // Call the provided free function on the component
+        component->interface->free(component->data);
+    }
+
+    free(component);
+}
+
+void component_draw_debug_ui(struct component* component){
+    if (component->interface->draw_debug_ui != nullptr) {
+        component->interface->draw_debug_ui(component->data);
+    }
+}

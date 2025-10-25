@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "cimgui/cimgui.h"
+#include "component.h"
 
 struct object* object_new(const char* name, struct object* parent) {
     struct object* new_object = malloc(sizeof(struct object));
@@ -25,7 +26,9 @@ void object_free(struct object* object) {
     }
     list_vp_delete(&object->children);
 
-    // TODO: Call free functions on components when they exist
+    for (int i = 0; i < object->components.size; i++) {
+        component_free(list_vp_at(&object->components, i));
+    }
     list_vp_delete(&object->components);
 
     free(object->name);
