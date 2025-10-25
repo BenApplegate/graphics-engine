@@ -1,0 +1,1 @@
+target_sources(graphics_engine PRIVATE test_component.c test_component.h)

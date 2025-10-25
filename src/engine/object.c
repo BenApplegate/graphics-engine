@@ -38,8 +38,7 @@ void object_update(const struct object* object) {
     }
 
     for (int i = 0; i < object->components.size; i++) {
-    // TODO: Update components once they exist
-
+        component_update(list_vp_at(&object->components, i));
     }
 }
 
@@ -49,8 +48,7 @@ void object_render(const struct object* object) {
     }
 
     for (int i = 0; i < object->components.size; i++) {
-        // TODO: Render components once they exist
-
+        component_render(list_vp_at(&object->components, i));
     }
 }
 
@@ -126,6 +124,17 @@ void object_draw_debug_window(struct object* object) {
     igText("Components: %i\tComponent Capacity: %i", object->components.size, object->components.capacity);
 
     igSeparatorText("Components");
+    if (igButton("Add test component", (ImVec2){0, 0})) {
+        object_add_new_component_of_type(object, TEST);
+    }
+
+    for (int i = 0; i < object->components.size; i++) {
+        igPushID_Int(i);
+        if (igCollapsingHeader_BoolPtr(((struct component*)object->components.data[i])->interface->printable_name, nullptr, 0)) {
+            component_draw_debug_ui(object->components.data[i]);
+        }
+        igPopID();
+    }
 
     igSeparatorText("Children");
     object_add_child_modal_ui(object);
@@ -137,4 +146,11 @@ void object_draw_debug_window(struct object* object) {
     }
 
     igEnd();
+}
+
+void object_add_new_component_of_type(struct object* object, enum COMPONENT_TYPE type) {
+    struct component* new_component = get_new_component_of_type(type);
+    list_vp_add(&object->components, new_component);
+
+    component_init(new_component);
 }

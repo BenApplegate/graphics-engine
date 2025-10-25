@@ -1,7 +1,14 @@
 #version 330 core
-layout (location = 0) in vec3 aPos;
+layout (location = 0) in vec2 aPos;
+
+out vec3 vertColor;
+
+uniform vec3 colors[10];
+uniform float colorShift;
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
+    vertColor = mix(colors[(gl_VertexID + int(colorShift)) % 9], colors[(gl_VertexID + int(colorShift) + 1) % 9], fract(colorShift));
+    if(gl_VertexID == 0) vertColor = colors[9];
+    gl_Position = vec4(aPos, 0.0, 1.0);
 }

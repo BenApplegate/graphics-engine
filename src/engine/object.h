@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../util/list_vp.h"
+#include "component.h"
 
 struct object {
   char* name; //The name of the object
@@ -40,3 +41,8 @@ void object_draw_scene_tree_node(struct object* object);
 
 /// Draws the imgui debug window for the specified object and its children
 void object_draw_debug_window(struct object* object);
+
+/// Adds a new component to the object of the specified type
+/// @param object The object to attach a new component to
+/// @param type The type of component to addd
+void object_add_new_component_of_type(struct object* object, enum COMPONENT_TYPE type);

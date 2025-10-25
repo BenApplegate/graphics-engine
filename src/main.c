@@ -6,7 +6,7 @@ int main(void) {
     ENGINE_FLAGS.verbose = true;
     ENGINE_FLAGS.show_imgui_windows = 2;
 
-    engine_init(800, 600, "Cool engine test");
+    engine_init(1920, 1080, "Cool engine test");
 
     engine_render_loop();
 

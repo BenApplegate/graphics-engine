@@ -4,6 +4,9 @@
 
 #include "engine.h"
 
+#include <stdlib.h>
+#include <time.h>
+
 #include "imgui_handler.h"
 #include  "../util/list_vp.h"
 #include "scene.h"
@@ -78,6 +81,8 @@ int engine_init(int width, int height, const char* title) {
 
 	//create scene list
 	ENGINE_DATA.scene_list = list_vp_new(5);
+
+	srand(time(nullptr));
 	return 0;
 }
 
@@ -129,4 +134,8 @@ void engine_load_new_scene(const char* name) {
 
 struct list_vp* engine_get_scenes() {
 	return &ENGINE_DATA.scene_list;
+}
+
+float engine_get_aspect_ratio() {
+	return (float) ENGINE_DATA.window_width / (float) ENGINE_DATA.window_height;
 }
