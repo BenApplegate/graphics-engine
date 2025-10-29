@@ -1,5 +1,6 @@
 /// Author: Benjamin Applegate
 /// Implements a resizable list of void pointers
+/// In the future it may be worth making a special list for ints or floats
 
 #pragma once
 #include <stddef.h>
