@@ -1,3 +1,7 @@
+/// Author: Benjamin Applegate
+/// Significant parts of this implementation came from https://github.com/peko/cimgui-c-example
+/// Other implementation information came from https://github.com/ocornut/imgui/wiki/Getting-Started#example-if-you-are-using-glfw--openglwebgl
+
 #include "imgui_handler.h"
 
 #include <cimgui/cimgui.h>
@@ -22,7 +26,7 @@ void imgui_init() {
     igGetStyle()->FontScaleMain *= 2.0f;
     ImGuiStyle_ScaleAllSizes(igGetStyle(), 3.0f);
 
-    igGetIO_Nil()->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    imgui_io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 }
 
