@@ -1,3 +1,5 @@
+/// Author: Benjamin Applegate
+
 #pragma once
 #include "../util/list_vp.h"
 
@@ -20,10 +22,14 @@ void scene_free(struct scene* scene);
 void scene_update(const struct scene* scene);
 
 /// Render the given scene, telling all objects and components to render
+/// @param scene The scene to render
 void scene_render(const struct scene* scene);
 
 /// Add a new child object to the scene with the given name
+/// @param scene The scene to create a new object in
+/// @param name The name to give the newly created object
 void scene_add_new_object(struct scene* scene, const char* name);
 
 /// Draws the imgui debug ui for the specified scene
+/// @param scene The scene to draw the UI for
 void scene_draw_debug_ui(struct scene* scene);

@@ -1,3 +1,5 @@
+/// Author: Benjamin Applegate
+
 #include "scene.h"
 
 #include <stdlib.h>
@@ -20,6 +22,7 @@ void scene_free(struct scene* scene) {
         object_free(scene->objects_list.data[i]);
     }
 
+    //Free scene data
     list_vp_delete(&scene->objects_list);
     free(scene->name);
     free(scene);
@@ -42,11 +45,14 @@ void scene_add_new_object(struct scene* scene, const char* name) {
 }
 
 void scene_draw_debug_ui(struct scene* scene) {
+    //Construct name for window
+    //TODO: Dont use hardcoded length for window name, instead calculate needed length
     char window_name[256];
     strcpy(window_name, "Scene: ");
     strcat(window_name, scene->name);
     igBegin(window_name, nullptr, ImGuiWindowFlags_None);
 
+    //Display number of objects in scene
     igText("Objects: %i", scene->objects_list.size);
     igText("Current Objects Capacity: %i", scene->objects_list.capacity);
 
@@ -78,6 +84,7 @@ void scene_draw_debug_ui(struct scene* scene) {
         igEndPopup();
     }
 
+    //Draw Scene Tree
     if (igTreeNodeEx_Str("Scene Tree", ImGuiTreeNodeFlags_DrawLinesFull)) {
         for (int i = 0; i < scene->objects_list.size; i++) {
             igPushID_Int(i);
