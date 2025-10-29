@@ -1,3 +1,5 @@
+/// Author: Benjamin Applegate
+
 #include "object.h"
 
 #include <stdlib.h>
@@ -10,32 +12,35 @@ struct object* object_new(const char* name, struct object* parent) {
     struct object* new_object = malloc(sizeof(struct object));
     new_object->name = strdup(name);
     new_object->parent = parent;
+    new_object->show_debug_window = false;
 
     new_object->children = list_vp_new(5);
     new_object->components = list_vp_new(5);
-
-    new_object->show_debug_window = false;
 
     return new_object;
 }
 
 void object_free(struct object* object) {
-    // First free children
+    //Free children then delete list of children
     for (int i = 0; i < object->children.size; i++) {
         object_free(list_vp_at(&object->children, i));
     }
     list_vp_delete(&object->children);
 
+    //Free components then delete list of components
     for (int i = 0; i < object->components.size; i++) {
         component_free(list_vp_at(&object->components, i));
     }
     list_vp_delete(&object->components);
 
+    //Finally free the object itself
     free(object->name);
     free(object);
 }
 
 void object_update(const struct object* object) {
+    //TODO: Decide if we should update top down or bottom up
+
     for (int i = 0 ; i < object->children.size; i++) {
         object_update(list_vp_at(&object->children, i));
     }
@@ -46,6 +51,8 @@ void object_update(const struct object* object) {
 }
 
 void object_render(const struct object* object) {
+    //TODO: Decide if we should render top down or bottom up
+
     for (int i = 0; i < object->children.size; i++) {
         object_render(list_vp_at(&object->children, i));
     }
@@ -152,8 +159,10 @@ void object_draw_debug_window(struct object* object) {
 }
 
 void object_add_new_component_of_type(struct object* object, enum COMPONENT_TYPE type) {
+    //Request new instance of component
     struct component* new_component = get_new_component_of_type(type);
     list_vp_add(&object->components, new_component);
 
+    //Initialize new component
     component_init(new_component);
 }
