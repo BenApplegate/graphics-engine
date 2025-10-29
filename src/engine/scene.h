@@ -1,4 +1,5 @@
 /// Author: Benjamin Applegate
+/// Implements a scene that can be loaded in engine that contains objects
 
 #pragma once
 #include "../util/list_vp.h"
