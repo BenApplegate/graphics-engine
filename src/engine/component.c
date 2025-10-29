@@ -1,8 +1,9 @@
-#include "component.h"
+//// Author: Benjamin Applegate
 
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "component.h"
 #include "engine.h"
 #include "../components/test_component.h"
 
@@ -37,7 +38,6 @@ void component_render(struct component* component){
 
 void component_free(struct component* component){
     if (component->interface->free != nullptr) {
-        // Call the provided free function on the component
         component->interface->free(component->data);
     }
 
