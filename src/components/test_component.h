@@ -1,3 +1,6 @@
+/// Author: Benjamin Applegate
+/// This component serves to test if the component interface works correctly
+
 #pragma once
 
 #include "../engine/component.h"
@@ -23,4 +26,6 @@ struct test_component {
     struct shader shader;
 };
 
+///Constructs a new Test Component
+///@returns A pointer to the newly constructed Test Component
 struct component* test_component_new();

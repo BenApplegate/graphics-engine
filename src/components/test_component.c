@@ -1,11 +1,12 @@
-#include "test_component.h"
+/// Author: Benjamin Applegate
 
 #include <stdlib.h>
 #include <glad/glad.h>
 #include <math.h>
 
-#include "../engine/engine.h"
+#include "test_component.h"
 #include "cimgui/cimgui.h"
+#include "../engine/engine.h"
 
 void init(void* data);
 void update(void* data);
@@ -25,6 +26,7 @@ struct component_interface TEST_COMPONENT_INTERFACE = {
 void allocate_geometry_data(struct test_component* comp) {
     glBindBuffer(GL_ARRAY_BUFFER, comp->vbo);
 
+    //Create buffer for data and fill buffer with vertex locations for a circle
     size_t buffer_size = (comp->vertex_count + 2) * 2;
     float* vertices = (float*) malloc(buffer_size * sizeof(float));
     comp->vertex_draw_count = comp->vertex_count + 2;
@@ -39,6 +41,8 @@ void allocate_geometry_data(struct test_component* comp) {
         vertices[(2 * i) + 2] = x;
         vertices[(2 * i) + 3] = y;
     }
+
+    //Send data to GPU and free CPU buffer
     glBufferData(GL_ARRAY_BUFFER, buffer_size * sizeof(float), vertices, GL_DYNAMIC_DRAW);
     free(vertices);
 }
@@ -46,6 +50,7 @@ void allocate_geometry_data(struct test_component* comp) {
 void init(void* data) {
     const auto comp = (struct test_component*) data;
 
+    //Set Initial Data
     comp->circleScale = 0.5f;
     comp->shouldDraw = true;
     comp->vertex_count = 8;
@@ -53,9 +58,7 @@ void init(void* data) {
     comp->shift_value = 0;
     comp->animate_speed = 0.001f;
 
-    //comp->colors[0].
-
-    // Load VAO
+    //Create and bind VAO and VBO
 
     glGenVertexArrays(1, &comp->vao);
     glBindVertexArray(comp->vao);
@@ -63,12 +66,14 @@ void init(void* data) {
     glGenBuffers(1, &comp->vbo);
     allocate_geometry_data(comp);
 
+    //Set vertex attributes
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);;
     glEnableVertexAttribArray(0);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    //Load test shaders
     comp->shader = load_shader("test.vertex", "test.fragment");
 
     //Init Colors
@@ -76,9 +81,9 @@ void init(void* data) {
         comp->colors[i] = (float) rand() / (float)RAND_MAX;
     }
 
+    //Load uniform locations
     comp->color_uniform = glGetUniformLocation(comp->shader.programID, "colors");
     comp->shift_uniform = glGetUniformLocation(comp->shader.programID, "colorShift");
-    glUniform1f(comp->shift_uniform, comp->shift_value);
 }
 
 void update(void* data) {
@@ -93,6 +98,7 @@ void render(void* data) {
 
     glBindVertexArray(comp->vao);
 
+    //Update uniform values and draw
     glUniform1f(comp->shift_uniform, comp->shift_value);
     glUniform3fv(comp->color_uniform, 10, comp->colors);
     glDrawArrays(GL_TRIANGLE_FAN, 0, comp->vertex_draw_count);
@@ -100,6 +106,8 @@ void render(void* data) {
 
 void delete(void* data){
     struct test_component* comp = (struct test_component*) data;
+
+    //Delte OpenGL objects then free the component
     glDeleteBuffers(1, &comp->vbo);
     glDeleteVertexArrays(1, &comp->vao);
 
