@@ -1,3 +1,6 @@
+/// Author: Benjamin Applegate
+/// Implements a scene object that can hold child objects and components
+
 #pragma once
 
 #include "../util/list_vp.h"
@@ -13,6 +16,7 @@ struct object {
 };
 
 /// Create a new object
+/// @warning Heap allocates the object, remember to call object_free when this is no longer being used
 /// @param name the name of the object
 /// @param parent The parent object of the new object, nullptr if new object has no parent
 struct object* object_new(const char* name, struct object* parent);
@@ -40,9 +44,10 @@ void object_add_new_child(struct object* object, const char* child_name);
 void object_draw_scene_tree_node(struct object* object);
 
 /// Draws the imgui debug window for the specified object and its children
+/// @param object The object to draw the window for
 void object_draw_debug_window(struct object* object);
 
 /// Adds a new component to the object of the specified type
 /// @param object The object to attach a new component to
-/// @param type The type of component to addd
+/// @param type The type of component to add
 void object_add_new_component_of_type(struct object* object, enum COMPONENT_TYPE type);

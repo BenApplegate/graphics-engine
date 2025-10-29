@@ -1,3 +1,7 @@
+/// Author: Benjamin Applegate
+/// Defines the main functions of the engine and exposes a global set of flags for the engine to use
+/// Handles window creation, scene loading, the update-render loop, and engine shutdown
+
 #pragma once
 #include <GLFW/glfw3.h>
 
@@ -23,11 +27,15 @@ void engine_render_loop();
 /// attempts to dispose of all currently loaded engine data
 void engine_free();
 
-/// Returns a pointer to the engine's GLFWwindow
+/// @returns A pointer to the engine's GLFWwindow
 GLFWwindow* engine_get_window();
 
+/// Creates a new scene and loads it into the engine
+/// @param name The name of the newly created scene
 void engine_load_new_scene(const char* name);
 
+/// @returns A pointer to the list of scenes loaded in the engine
 struct list_vp* engine_get_scenes();
 
+/// @returns The current aspect ratio of the engine's window as a float
 float engine_get_aspect_ratio();

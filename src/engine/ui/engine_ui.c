@@ -1,9 +1,9 @@
-#include "engine_ui.h"
-
-#include "../../util/list_vp.h"
+/// Author: Benjamin Applegate
 
 #include <cimgui/cimgui.h>
 
+#include "engine_ui.h"
+#include "../../util/list_vp.h"
 #include "../engine.h"
 #include "../scene.h"
 
@@ -43,6 +43,6 @@ void ui_draw_engine_ui() {
     }
 
     if (UI_FLAGS.show_imgui_demo_window) {
-        igShowDemoWindow(0);
+        igShowDemoWindow(nullptr);
     }
 }

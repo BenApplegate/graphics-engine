@@ -1,12 +1,12 @@
+/// Author: Benjamin Applegate
+
 #include <stdio.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <time.h>
+#include <stdlib.h>
 
 #include "engine.h"
-
-#include <stdlib.h>
-#include <time.h>
-
 #include "imgui_handler.h"
 #include  "../util/list_vp.h"
 #include "scene.h"
@@ -14,6 +14,7 @@
 
 struct engine_flags ENGINE_FLAGS = {false};
 
+//Define the data the Engine needs to operate
 static struct {
 	GLFWwindow* window;
 	int window_width;
@@ -82,6 +83,7 @@ int engine_init(int width, int height, const char* title) {
 	//create scene list
 	ENGINE_DATA.scene_list = list_vp_new(5);
 
+	//Seed random number generation
 	srand(time(nullptr));
 	return 0;
 }
@@ -106,20 +108,17 @@ void engine_render_loop() {
 
 		imgui_render();
 		glfwSwapBuffers(ENGINE_DATA.window);
-
-
 	}
 }
 
 void engine_free() {
-	//Free all scenes
+	//Free all scenes then delete scene list
 	for (int i = 0; i < ENGINE_DATA.scene_list.size; i++) {
 		scene_free(ENGINE_DATA.scene_list.data[i]);
 	}
 	list_vp_delete(&ENGINE_DATA.scene_list);
 
 	imgui_shutdown();
-	//Terminate GLFW
 	glfwTerminate();
 }
 
