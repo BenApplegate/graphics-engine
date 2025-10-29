@@ -1,3 +1,6 @@
+/// Author: Benjamin Applegate
+/// Implements a resizable list of void pointers
+
 #pragma once
 #include <stddef.h>
 
@@ -17,6 +20,7 @@ struct list_vp list_vp_new(size_t initial_capacity);
 void list_vp_delete(const struct list_vp* list);
 
 /// Resets all data in allocated list to nullptr, and resets size
+/// @warning Does not free data contained within list, make sure any heap allocated data within the list is freed before calling to avoid memory leaks
 /// @param list The list to clear
 void list_vp_clear(struct list_vp* list);
 
