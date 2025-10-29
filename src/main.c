@@ -1,8 +1,9 @@
-#include <stdio.h>
+/// Author: Benjamin Applegate
+/// Contains the entry point of the engine, setting flags and information before starting the engine
+
 #include "engine/engine.h"
 
 int main(void) {
-    //Enable verbose logging
     ENGINE_FLAGS.verbose = true;
     ENGINE_FLAGS.show_imgui_windows = 2;
 
