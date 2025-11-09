@@ -35,7 +35,7 @@ void scene_add_new_object(struct scene* scene, const char* name);
 /// Adds an existing object to the scene
 /// @param scene The scene to add the object to
 /// @param object The object to add to the scene
-void scene_add_object(struct scene* scene, struct object* object)
+void scene_add_object(struct scene* scene, struct object* object);
 
 /// Draws the imgui debug ui for the specified scene
 /// @param scene The scene to draw the UI for
