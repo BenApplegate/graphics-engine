@@ -4,6 +4,7 @@
 
 #pragma once
 #include <GLFW/glfw3.h>
+#include "scene.h"
 
 //Engine flags can be changed and accessed data, right now the only option is verbose logging
 struct engine_flags {
@@ -33,6 +34,10 @@ GLFWwindow* engine_get_window();
 /// Creates a new scene and loads it into the engine
 /// @param name The name of the newly created scene
 void engine_load_new_scene(const char* name);
+
+/// Loads an existing scene object into the engine
+/// @param scene The scene to load
+void engine_load_scene(struct scene* scene);
 
 /// @returns A pointer to the list of scenes loaded in the engine
 struct list_vp* engine_get_scenes();

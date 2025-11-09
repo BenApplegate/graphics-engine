@@ -131,6 +131,10 @@ void engine_load_new_scene(const char* name) {
 	list_vp_add(&ENGINE_DATA.scene_list, new_scene);
 }
 
+void engine_load_scene(struct scene* scene) {
+	list_vp_add(&ENGINE_DATA.scene_list, scene);
+}
+
 struct list_vp* engine_get_scenes() {
 	return &ENGINE_DATA.scene_list;
 }
