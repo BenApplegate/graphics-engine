@@ -17,8 +17,7 @@ void ui_draw_engine_menu_bar() {
 
         if (igBeginMenu("Scene", true)) {
             if (igMenuItem_Bool("Load Test Scene", "", false, true)) {
-                //TODO: Create actual test scene and load it
-                engine_load_new_scene("Test Scene");
+                engine_load_scene(scene_create_test_scene());
             }
 
             igEndMenu();

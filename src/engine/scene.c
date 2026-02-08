@@ -44,6 +44,10 @@ void scene_add_new_object(struct scene* scene, const char* name) {
     list_vp_add(&scene->objects_list, object_new(name, nullptr));
 }
 
+void scene_add_object(struct scene* scene, struct object* object) {
+    list_vp_add(&scene->objects_list, object);
+}
+
 void scene_draw_debug_ui(struct scene* scene) {
     //Construct name for window
     //TODO: Dont use hardcoded length for window name, instead calculate needed length
@@ -102,4 +106,14 @@ void scene_draw_debug_ui(struct scene* scene) {
         object_draw_debug_window(scene->objects_list.data[i]);
         igPopID();
     }
+}
+
+struct scene* scene_create_test_scene() {
+    struct scene* scene = scene_new("Test Scene");
+
+    struct object* test_object = object_new("Test Object", nullptr);
+    object_add_new_component_of_type(test_object, TEST);
+
+    scene_add_object(scene, test_object);
+    return scene;
 }

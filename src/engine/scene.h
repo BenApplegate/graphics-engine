@@ -3,6 +3,7 @@
 
 #pragma once
 #include "../util/list_vp.h"
+#include "object.h"
 
 struct scene {
     char* name;
@@ -31,6 +32,15 @@ void scene_render(const struct scene* scene);
 /// @param name The name to give the newly created object
 void scene_add_new_object(struct scene* scene, const char* name);
 
+/// Adds an existing object to the scene
+/// @param scene The scene to add the object to
+/// @param object The object to add to the scene
+void scene_add_object(struct scene* scene, struct object* object);
+
 /// Draws the imgui debug ui for the specified scene
 /// @param scene The scene to draw the UI for
 void scene_draw_debug_ui(struct scene* scene);
+
+/// Constructs a new scene with test objects
+/// @returns The newly created scene
+struct scene* scene_create_test_scene();
