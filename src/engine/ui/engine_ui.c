@@ -16,9 +16,14 @@ void ui_draw_engine_menu_bar() {
     if (igBeginMainMenuBar()) {
 
         if (igBeginMenu("Scene", true)) {
+            if (igMenuItem_Bool("Load Scene from file", "", false, true)) {
+                struct scene* new_scene = scene_load_from_file("test.scn");
+                if (new_scene != nullptr) engine_load_scene(new_scene);
+            }
             if (igMenuItem_Bool("Load Test Scene", "", false, true)) {
                 engine_load_scene(scene_create_test_scene());
             }
+
 
             igEndMenu();
         }

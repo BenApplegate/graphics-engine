@@ -58,6 +58,11 @@ void scene_draw_debug_ui(struct scene* scene) {
     strcat(window_name, scene->name);
     igBegin(window_name, nullptr, ImGuiWindowFlags_None);
 
+    igBeginMenuBar();
+    if (igMenuItem_Bool("Save", nullptr, false, true)) {
+        scene_save_to_file(scene, "test.scn");
+    }
+
     //Display number of objects in scene
     igText("Objects: %i", scene->objects_list.size);
     igText("Current Objects Capacity: %i", scene->objects_list.capacity);
@@ -122,14 +127,16 @@ struct scene* scene_create_test_scene() {
 
 int scene_save_to_file(const struct scene* scene, const char* filename) {
     //First we create the file to save the information to
-    int file_descriptor = creat(filename, 644);
+    int file_descriptor = creat(filename, 0000644);
     if (file_descriptor == -1) {
+        fprintf(stderr, "Failed to create file\n");
         return 0;
     }
 
     //Write file header to mark filetype and return if write fails
     if (write(file_descriptor, "BAGE_SCENE", 10) != 10) {
         close(file_descriptor);
+        fprintf(stderr, "Failed to write file header\n");
         return 0;
     }
 
@@ -151,6 +158,7 @@ int scene_save_to_file(const struct scene* scene, const char* filename) {
     //End point for write error gotos
     write_error:
     close(file_descriptor);
+    fprintf(stderr, "Failed to write to file\n");
     return 0;
 }
 
