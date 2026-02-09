@@ -2,8 +2,10 @@
 
 #include "scene.h"
 
+#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <cimgui/cimgui.h>
 
 #include "object.h"
@@ -116,4 +118,86 @@ struct scene* scene_create_test_scene() {
 
     scene_add_object(scene, test_object);
     return scene;
+}
+
+int scene_save_to_file(const struct scene* scene, const char* filename) {
+    //First we create the file to save the information to
+    int file_descriptor = creat(filename, 644);
+    if (file_descriptor == -1) {
+        return 0;
+    }
+
+    //Write file header to mark filetype and return if write fails
+    if (write(file_descriptor, "BAGE_SCENE", 10) != 10) {
+        close(file_descriptor);
+        return 0;
+    }
+
+    //Write name of scene
+    size_t namelen = strlen(scene->name);
+
+    //NOTE: I am using goto's for the error handling in this section as it makes writing the code slightly simpler
+    //The endpoint for these gotos can be found at the bottom of the function
+
+    //write length of string
+    if (write(file_descriptor, &namelen, sizeof(size_t)) != sizeof(size_t)) { goto write_error; }
+    //write string
+    if (write(file_descriptor, scene->name, namelen) != namelen) { goto write_error; }
+
+    //Close file and return success
+    close(file_descriptor);
+    return 1;
+
+    //End point for write error gotos
+    write_error:
+    close(file_descriptor);
+    return 0;
+}
+
+struct scene* scene_load_from_file(const char* filename) {
+    if (filename == nullptr) { return nullptr; }
+
+    int file_descriptor = open(filename, O_RDONLY);
+    if (file_descriptor == -1) {
+        fprintf(stderr, "Failed to open file %s\n", filename);
+        return nullptr;
+    }
+
+    char buffer[11];
+    if (read(file_descriptor, buffer, 10) != 10) {
+        close(file_descriptor);
+        return nullptr;
+    }
+
+    //Check for correct file heading
+    if (strcmp(buffer, "BAGE_SCENE") != 0) {
+        close(file_descriptor);
+        fprintf(stderr, "File did not have correct file heading, is not a scene file\n");
+        return nullptr;
+    }
+
+    //NOTE: I am using goto's for the error handling in this section as it makes writing the code slightly simpler
+    //The endpoint for these gotos can be found at the bottom of the function
+
+    //Read name length
+    size_t namelen;
+    if (read(file_descriptor, &namelen, sizeof(size_t)) != sizeof(size_t)) { goto read_error; }
+
+    //allocate buffer for name, read name, and add null terminator
+    char* name_buffer = (char*)malloc(namelen + 1);
+    if (read(file_descriptor, name_buffer, namelen) != namelen) { goto read_error; }
+    name_buffer[namelen] = 0;
+
+    //Create new scene and delete temp buffer
+    struct scene* new_scene = scene_new(name_buffer);
+    free(name_buffer);
+
+    close(file_descriptor);
+    return new_scene;
+
+    //Endpoint for read error goto statements
+    read_error:
+        close(file_descriptor);
+        fprintf(stderr, "File did not have correct file heading, is not a scene file\n");
+        return nullptr;
 }

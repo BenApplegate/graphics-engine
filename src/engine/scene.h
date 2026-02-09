@@ -44,3 +44,14 @@ void scene_draw_debug_ui(struct scene* scene);
 /// Constructs a new scene with test objects
 /// @returns The newly created scene
 struct scene* scene_create_test_scene();
+
+/// Save the specified scene to a file
+/// @param scene The scene to save
+/// @param filename The filename of the scene to save
+/// @returns 1 if success, 0 on failure
+int scene_save_to_file(const struct scene* scene, const char* filename);
+
+/// Loads a scene from a previously saved file
+/// @param filename The filename to look for the scene file
+/// @returns The scene contained in the specified file or nullptr if the scene could not be loaded
+struct scene* scene_load_from_file(const char* filename);
