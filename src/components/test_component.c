@@ -13,6 +13,8 @@ void update(void* data);
 void render(void* data);
 void delete(void* data);
 void draw_debug_ui(void* data);
+int save_to_file(void* data, FILE* file);
+int load_from_file(void* data, FILE* file);
 
 struct component_interface TEST_COMPONENT_INTERFACE = {
     "Test Component",
@@ -20,7 +22,9 @@ struct component_interface TEST_COMPONENT_INTERFACE = {
     update,
     render,
     delete,
-    draw_debug_ui
+    draw_debug_ui,
+    save_to_file,
+    load_from_file
 };
 
 void allocate_geometry_data(struct test_component* comp) {
@@ -149,4 +153,54 @@ struct component* test_component_new() {
     comp->type = TEST;
     comp->interface = &TEST_COMPONENT_INTERFACE;
     return comp;
+}
+
+int save_to_file(void* data, FILE* file) {
+    struct test_component* comp = (struct test_component*) data;
+
+    if (fwrite(&comp->circleScale, sizeof(float), 1, file) != 1) return -1;
+    if (fwrite(&comp->shouldDraw, sizeof(bool), 1, file) != 1) return -1;
+    if (fwrite(&comp->vertex_count, sizeof(int), 1, file) != 1) return -1;
+    if (fwrite(&comp->offset, sizeof(ImVec2), 1, file) != 1) return -1;
+    if (fwrite(&comp->shift_value, sizeof(float), 1, file) != 1) return -1;
+    if (fwrite(&comp->animate_speed, sizeof(float), 1, file) != 1) return -1;
+    if (fwrite(comp->colors, sizeof(float), 30, file) != 30) return -1;
+
+    return 0;
+}
+
+int load_from_file(void* data, FILE* file) {
+    struct test_component* comp = (struct test_component*) data;
+
+    if (fread(&comp->circleScale, sizeof(float), 1, file) != 1) return -1;
+    if (fread(&comp->shouldDraw, sizeof(bool), 1, file) != 1) return -1;
+    if (fread(&comp->vertex_count, sizeof(int), 1, file) != 1) return -1;
+    if (fread(&comp->offset, sizeof(ImVec2), 1, file) != 1) return -1;
+    if (fread(&comp->shift_value, sizeof(float), 1, file) != 1) return -1;
+    if (fread(&comp->animate_speed, sizeof(float), 1, file) != 1) return -1;
+    if (fread(comp->colors, sizeof(float), 30, file) != 30) return -1;
+
+    //Create and bind VAO and VBO
+
+    glGenVertexArrays(1, &comp->vao);
+    glBindVertexArray(comp->vao);
+
+    glGenBuffers(1, &comp->vbo);
+    allocate_geometry_data(comp);
+
+    //Set vertex attributes
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);;
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    //Load test shaders
+    comp->shader = load_shader("test.vertex", "test.fragment");
+
+    //Load uniform locations
+    comp->color_uniform = glGetUniformLocation(comp->shader.programID, "colors");
+    comp->shift_uniform = glGetUniformLocation(comp->shader.programID, "colorShift");
+
+    return 0;
 }

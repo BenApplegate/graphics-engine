@@ -49,3 +49,30 @@ void component_draw_debug_ui(struct component* component){
         component->interface->draw_debug_ui(component->data);
     }
 }
+
+int component_save_to_file(struct component* component, FILE* file) {
+    if (fwrite(&component->type, sizeof(enum COMPONENT_TYPE), 1, file) != 1) return -1;
+    if (component->interface->save_to_file != nullptr) {
+        return component->interface->save_to_file(component->data, file);
+    }
+    return 0;
+}
+
+struct component* component_load_from_file(FILE* file) {
+    enum COMPONENT_TYPE type;
+    if (fread(&type, sizeof(enum COMPONENT_TYPE), 1, file) != 1) return nullptr;
+
+    struct component* comp = get_new_component_of_type(type);
+    if (comp->interface->load_from_file != nullptr) {
+        if (comp->interface->load_from_file(comp->data, file) != 0) {
+            component_free(comp);
+            return nullptr;
+        }
+    }
+    else {
+        //If there is no load function, we default init it so there wont be issues
+        component_init(comp);
+    }
+
+    return comp;
+}
