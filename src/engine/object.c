@@ -166,3 +166,44 @@ void object_add_new_component_of_type(struct object* object, enum COMPONENT_TYPE
     //Initialize new component
     component_init(new_component);
 }
+
+int object_save_to_file(struct object* object, FILE* file) {
+    //Write object name to file
+    size_t namelen = strlen(object->name);
+    if (fwrite(&namelen, sizeof(size_t), 1, file) != 1) return -1;
+    if (fwrite(object->name, sizeof(char), namelen, file) != namelen) return -1;
+
+    //TODO: Write component information
+
+    //Write number of children, then write children to file
+    if (fwrite(&object->children.size, sizeof(size_t), 1, file) != 1) return -1;
+    for (int i = 0; i < object->children.size; i++) {
+        if (object_save_to_file(object->children.data[i], file)) return -1;
+    }
+
+    return 0;
+}
+
+struct object* object_load_from_file(FILE* file, struct object* parent) {
+    size_t namelen;
+    if (fread(&namelen, sizeof(size_t), 1, file) != 1) return nullptr;
+    char* name = (char*)malloc(namelen + 1);
+    name[namelen] = '\0';
+    if (fread(name, sizeof(char), namelen, file) != namelen) { free(name); return nullptr;}
+
+    struct object* new_object = object_new(name, parent);
+    free(name);
+
+    //TODO: Read object components from file
+
+    //Load object's children
+    size_t children_count;
+    if (fread(&children_count, sizeof(size_t), 1, file) != 1) {object_free(new_object); return nullptr;}
+    for (int i = 0; i < children_count; i++) {
+        struct object* child = object_load_from_file(file, new_object);
+        if (child == nullptr) {object_free(new_object); return nullptr;}
+        list_vp_add(&new_object->children, child);
+    }
+
+    return new_object;
+}

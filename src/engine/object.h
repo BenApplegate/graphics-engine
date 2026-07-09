@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <stdio.h>
+
 #include "../util/list_vp.h"
 #include "component.h"
 
@@ -51,3 +53,14 @@ void object_draw_debug_window(struct object* object);
 /// @param object The object to attach a new component to
 /// @param type The type of component to add
 void object_add_new_component_of_type(struct object* object, enum COMPONENT_TYPE type);
+
+/// Saves the specified object into the given file
+/// @param object The object to save into the file
+/// @param file The file to save the object into (must be open)
+/// @returns 0 if success, nonzero if error
+int object_save_to_file(struct object* object, FILE* file);
+
+/// Loads an object from a given file
+/// @param file The file to load an object from
+/// @param parent The parent object for the object to load
+struct object* object_load_from_file(FILE* file, struct object* parent);
